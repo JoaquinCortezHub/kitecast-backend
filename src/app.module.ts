@@ -6,11 +6,12 @@ import { WeatherModule } from './weather/weather.module';
 import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
 import { PrismaService } from './prisma.service';
+import { UnsplashModule } from './unsplash/unsplash.module';
 
 @Module({
   imports: [ConfigModule.forRoot({
     isGlobal: true
-  }), WeatherModule, UserModule, AuthModule],
+  }), WeatherModule, UserModule, AuthModule, UnsplashModule],
   controllers: [AppController],
   providers: [AppService, PrismaService],
 })
