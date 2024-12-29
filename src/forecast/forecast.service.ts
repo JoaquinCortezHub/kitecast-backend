@@ -2,6 +2,7 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import axios from 'axios';
 import { CoordinatesDto } from './dto/coordinatesDto.dto';
 import { ForecastDto } from './dto/forecastDto.dto';
+import { utimes } from 'fs';
 
 interface Coordinates {
     lat: number;
@@ -34,17 +35,15 @@ export class ForecastService {
 
     async getForecast(city: string): Promise<any> {
         const coordinates = await this.getCoordinates(city)
-        const url = `https://api.openweathermap.org/data/3.0/onecall?lat=${coordinates.lat}&lon=${coordinates.lon}&exclude=hourly,minutely,current,alerts&appid=${process.env.OPEN_WEATHER_API_KEY}`
-        
+        const url = `https://api.openweathermap.org/data/2.5/forecast?lat=${coordinates.lat}&lon=${coordinates.lon}&appid=${process.env.OPEN_WEATHER_API_KEY}`
         try {
-            const { data } = await axios.get(url);
-            console.log(data)
-
-            if(!data || !data.daily) {
+            const data = await axios.get(url)
+            
+            if(!data || !data.data) {
                 throw new Error('Daily forecast data fetch failed.');  
             }
 
-            return data.daily;
+            return data.data;
         } catch (error) {
             if(axios.isAxiosError(error)) {
                 throw new HttpException('Axios couldnt fetch the data', HttpStatus.NOT_FOUND);
