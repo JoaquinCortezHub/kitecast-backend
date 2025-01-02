@@ -35,7 +35,7 @@ export class ForecastService {
 
     async getForecast(city: string): Promise<any> {
         const coordinates = await this.getCoordinates(city)
-        const url = `https://api.openweathermap.org/data/2.5/forecast?lat=${coordinates.lat}&lon=${coordinates.lon}&appid=${process.env.OPEN_WEATHER_API_KEY}`
+        const url = `https://api.openweathermap.org/data/2.5/forecast?lat=${coordinates.lat}&lon=${coordinates.lon}&appid=${process.env.OPEN_WEATHER_API_KEY}&units=metric`
         try {
             const data = await axios.get(url)
             

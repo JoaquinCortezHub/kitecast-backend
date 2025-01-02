@@ -30,6 +30,5 @@ export class WeatherController {
                 HttpStatus.INTERNAL_SERVER_ERROR
             )
         }
-
     };
 }
