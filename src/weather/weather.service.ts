@@ -1,5 +1,6 @@
 import { HttpException, HttpStatus, Injectable, OnModuleInit } from '@nestjs/common';
 import axios from 'axios';
+import { promises as fs } from "fs";
 import { OpenWeatherResponse } from 'src/weather/types/api-response';
 
 interface GeocodingCache {
@@ -20,14 +21,7 @@ export class WeatherService implements OnModuleInit {
 
     onModuleInit() {
         this.loadCache();
-    };
-
-    private async loadCache() {
-        try {
-            this.geocodingCache = {};
-        } catch (error) {
-            console.error('Failed to load geocoding cache:', error);
-        };
+        this.cleanupCache();
     };
 
     private async getCoordinates(city: string): Promise<{ lat: number; lon: number }> {
@@ -35,13 +29,12 @@ export class WeatherService implements OnModuleInit {
 
         if(this.geocodingCache[normalizedCity]) {
             const cached = this.geocodingCache[normalizedCity];
-
             if(Date.now() - cached.timestamp < this.CACHE_TTL) {
                 return { lat: cached.lat, lon: cached.lon };
             };
 
             delete this.geocodingCache[normalizedCity];
-        }
+        };
 
         const geoResponse = await axios.get(
             `${this.geoUrl}?q=${encodeURI(normalizedCity)}&limit=1&appid=${this.apiKey}`
@@ -54,6 +47,8 @@ export class WeatherService implements OnModuleInit {
             timestamp: Date.now(),
         };
 
+        this.cleanupCache();
+        await this.saveCache();
         return { lat, lon };
     }
 
@@ -66,8 +61,6 @@ export class WeatherService implements OnModuleInit {
         };
 
         try {
-            
-
             const { lat, lon } = await this.getCoordinates(city);
 
             const weatherResponse = await axios.get<OpenWeatherResponse>(
@@ -89,4 +82,35 @@ export class WeatherService implements OnModuleInit {
             throw new HttpException(message, status);
         }
     };
+
+    private async loadCache(): Promise<void> {
+        try {
+            const data = await fs.readFile('geocoding-cache.json', 'utf-8');
+            this.geocodingCache = JSON.parse(data);
+        } catch (error) {
+            this.geocodingCache = {};
+        };
+    };
+
+    private async saveCache(): Promise<void> {
+        try {
+            await fs.writeFile(
+                'geocoding-cache.json',
+                JSON.stringify(this.geocodingCache),
+                'utf-8'
+            );
+        } catch (error) {
+            console.error('Failed to save geocoding cache:', error);
+        }
+    };
+
+    private cleanupCache(): void {
+        const maxEntries = 500;
+        const entries = Object.entries(this.geocodingCache);
+
+        if(entries.length > maxEntries) {
+            const sortedEntries = entries.sort((a, b) => b[1].timestamp - a[1].timestamp);
+            this.geocodingCache = Object.fromEntries(sortedEntries.slice(0, maxEntries));
+        }
+    }
 }
