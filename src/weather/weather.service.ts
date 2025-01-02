@@ -1,12 +1,61 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable, OnModuleInit } from '@nestjs/common';
 import axios from 'axios';
 import { OpenWeatherResponse } from 'src/weather/types/api-response';
 
+interface GeocodingCache {
+    [city: string]: {
+        lat: number;
+        lon: number;
+        timestamp: number;
+    };
+};
+
 @Injectable()
-export class WeatherService {
+export class WeatherService implements OnModuleInit {
     private readonly apiKey = process.env.OPEN_WEATHER_API_KEY;
     private readonly baseUrl = 'https://api.openweathermap.org/data/2.5';
     private readonly geoUrl = 'http://api.openweathermap.org/geo/1.0/direct';
+    private readonly CACHE_TTL = 30 * 24 * 60 * 60 * 1000;
+    private geocodingCache: GeocodingCache = {};
+
+    onModuleInit() {
+        this.loadCache();
+    };
+
+    private async loadCache() {
+        try {
+            this.geocodingCache = {};
+        } catch (error) {
+            console.error('Failed to load geocoding cache:', error);
+        };
+    };
+
+    private async getCoordinates(city: string): Promise<{ lat: number; lon: number }> {
+        const normalizedCity = city.toLowerCase().trim();
+
+        if(this.geocodingCache[normalizedCity]) {
+            const cached = this.geocodingCache[normalizedCity];
+
+            if(Date.now() - cached.timestamp < this.CACHE_TTL) {
+                return { lat: cached.lat, lon: cached.lon };
+            };
+
+            delete this.geocodingCache[normalizedCity];
+        }
+
+        const geoResponse = await axios.get(
+            `${this.geoUrl}?q=${encodeURI(normalizedCity)}&limit=1&appid=${this.apiKey}`
+        );
+
+        const { lat, lon } = geoResponse.data[0];
+        this.geocodingCache[normalizedCity] = {
+            lat,
+            lon,
+            timestamp: Date.now(),
+        };
+
+        return { lat, lon };
+    }
 
     async getWeather(city: string): Promise<OpenWeatherResponse> {
         if (!city || city.trim().length === 0) {
@@ -17,17 +66,9 @@ export class WeatherService {
         };
 
         try {
-            const geoResponse = await axios.get(
-                `${this.geoUrl}?q=${encodeURI(city)}&limit=1&appid=${this.apiKey}`
-            );
-            if (!geoResponse.data?.[0]) {
-                throw new HttpException(
-                    `City not found: ${city}`,
-                    HttpStatus.NOT_FOUND,
-                );
-            };
+            
 
-            const { lat, lon } = geoResponse.data[0];
+            const { lat, lon } = await this.getCoordinates(city);
 
             const weatherResponse = await axios.get<OpenWeatherResponse>(
                 `${this.baseUrl}/weather?lat=${lat}&lon=${lon}&appid=${this.apiKey}&units=metric`,
