@@ -8,11 +8,12 @@ import { AuthModule } from './auth/auth.module';
 import { PrismaService } from './prisma.service';
 import { UnsplashModule } from './unsplash/unsplash.module';
 import { ForecastModule } from './forecast/forecast.module';
+import { MapsModule } from './maps/maps.module';
 
 @Module({
   imports: [ConfigModule.forRoot({
     isGlobal: true
-  }), WeatherModule, UserModule, AuthModule, UnsplashModule, ForecastModule],
+  }), WeatherModule, UserModule, AuthModule, UnsplashModule, ForecastModule, MapsModule],
   controllers: [AppController],
   providers: [AppService, PrismaService],
 })

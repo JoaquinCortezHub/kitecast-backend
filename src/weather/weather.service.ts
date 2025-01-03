@@ -113,4 +113,4 @@ export class WeatherService implements OnModuleInit {
             this.geocodingCache = Object.fromEntries(sortedEntries.slice(0, maxEntries));
         }
     }
-    }
+}
