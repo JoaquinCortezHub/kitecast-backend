@@ -31,6 +31,7 @@ export interface OpenWeatherResponse {
   clouds: {
     all: number;
   };
+  dt: number;
   sys: {
     country: string;
     sunrise: number;

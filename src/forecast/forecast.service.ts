@@ -1,8 +1,6 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import axios from 'axios';
 import { CoordinatesDto } from './dto/coordinatesDto.dto';
-import { ForecastDto } from './dto/forecastDto.dto';
-import { utimes } from 'fs';
 
 interface Coordinates {
     lat: number;
