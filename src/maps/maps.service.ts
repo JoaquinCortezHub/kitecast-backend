@@ -41,7 +41,7 @@ export class MapsService {
         const coordinates = await this.getCoordinates(city);
         const tileCoordinates = this.toTileCoordinates(coordinates.lat, coordinates.lon, this.zoomLevel);
 
-        const tileUrl = `${this.mapUrl}${this.windLayer}/${this.zoomLevel}/${tileCoordinates.x}/${tileCoordinates.y}.png?appid=${this.API_KEY}`
+        const tileUrl = `${this.mapUrl}/${this.windLayer}/${this.zoomLevel}/${tileCoordinates.x}/${tileCoordinates.y}.png?appid=${this.API_KEY}`
         
         return {
             tileUrl,
