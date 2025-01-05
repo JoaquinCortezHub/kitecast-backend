@@ -6,7 +6,7 @@ import { response } from 'express';
 export class MapsService {
     private readonly API_KEY = process.env.OPEN_WEATHER_API_KEY;
     private readonly geoUrl = 'http://api.openweathermap.org/geo/1.0/direct';
-    private readonly mapUrl = 'https://tile.openweathermap.org/map/'
+    private readonly mapUrl = 'https://tile.openweathermap.org/map'
     private readonly windLayer = 'wind_new';
     private readonly precipitationLayer = 'precipitation_new';
     private readonly zoomLevel = 8;
@@ -41,29 +41,33 @@ export class MapsService {
         const coordinates = await this.getCoordinates(city);
         const tileCoordinates = this.toTileCoordinates(coordinates.lat, coordinates.lon, this.zoomLevel);
 
-        const response = await axios.get(
-            `${this.mapUrl}${this.windLayer}/${this.zoomLevel}/${tileCoordinates.x}/${tileCoordinates.y}.png?appid=${this.API_KEY}`
-        );
-
-        if(!response.data || response.data === undefined) {
-            throw new Error('Error fetching map from the API.');
+        const tileUrl = `${this.mapUrl}${this.windLayer}/${this.zoomLevel}/${tileCoordinates.x}/${tileCoordinates.y}.png?appid=${this.API_KEY}`
+        
+        return {
+            tileUrl,
+            coordinates: {
+                lat: coordinates.lat,
+                lon: coordinates.lon
+            },
+            zoom: this.zoomLevel,
+            layer: this.windLayer
         };
-
-        return response.data;
     };
 
     async getPrecipitationMap(city: string) {
         const coordinates = await this.getCoordinates(city);
         const tileCoordinates = this.toTileCoordinates(coordinates.lat, coordinates.lon, this.zoomLevel);
 
-        const response = await axios.get(
-            `${this.mapUrl}${this.precipitationLayer}/${this.zoomLevel}/${tileCoordinates.x}/${tileCoordinates.y}.png?appid=${this.API_KEY}`
-        );
+        const tileUrl = `${this.mapUrl}/${this.precipitationLayer}/${this.zoomLevel}/${tileCoordinates.x}/${tileCoordinates.y}.png?appid=${this.API_KEY}`
 
-        if(!response.data || response.data === undefined) {
-            throw new Error('Error fetching map from the API.');
+        return {
+            tileUrl,
+            coordinates: {
+                lat: coordinates.lat,
+                lon: coordinates.lon
+            },
+            zoom: this.zoomLevel,
+            layer: this.precipitationLayer
         };
-
-        return response.data;
     }
 }
