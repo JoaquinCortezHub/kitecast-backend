@@ -3,7 +3,6 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ConfigModule } from '@nestjs/config';
 import { WeatherModule } from './weather/weather.module';
-import { PrismaService } from './prisma.service';
 import { UnsplashModule } from './unsplash/unsplash.module';
 import { ForecastModule } from './forecast/forecast.module';
 
@@ -12,6 +11,6 @@ import { ForecastModule } from './forecast/forecast.module';
     isGlobal: true
   }), WeatherModule, UnsplashModule, ForecastModule],
   controllers: [AppController],
-  providers: [AppService, PrismaService],
+  providers: [AppService],
 })
 export class AppModule {}
