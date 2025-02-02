@@ -49,7 +49,7 @@ This endpoint returns both current weather and forecast information.
 
 ## Lessons Learned
 
-This project taught me a couple of lessons on how server should be structured, how to make use of external API's and how to properly implement the MVC design pattern.
+This project taught me a couple of lessons on how serverx should be structured, how to make use of external API's and how to properly implement the MVC design pattern.
 
 This project started as a basic app in which I wanted to learn how to code with Nest.js. I had previously studied Java in college, so the code structure in Nest was really familiar.
 
