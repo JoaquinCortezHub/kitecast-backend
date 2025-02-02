@@ -42,18 +42,18 @@ This endpoint returns both current weather and forecast information.
 | :-------- | :------- | :-------------------------------- |
 | `spot`      | `String` | **Required**. parameter to look in the Unsplash db. |
 
-#### add(num1, num2)
+#### fetchPhotos(Spot: String)
 
-Takes two numbers and returns the sum.
+- This function takes the name of the searched spot and fetches an image from the Unsplah library.
 
 
 ## Lessons Learned
 
-This project taught me a couple of lessons regarding project structure and code organization. At first, when the codebase was small, I was coding at light-speed, creating new components and connecting them with existing ones, quickly implementing the basic logic to make the app work.
+This project taught me a couple of lessons on how server should be structured, how to make use of external API's and how to properly implement the MVC design pattern.
 
-Then, the project reached a stage where I was getting lost looking for the implementation of a component, the app started to behave in ways I didn't intend it to and navigating through the files was a nightmare.
+This project started as a basic app in which I wanted to learn how to code with Nest.js. I had previously studied Java in college, so the code structure in Nest was really familiar.
 
-After a quick structure re-arrangement, I learned that organizing the structure and logic of your code is as important as the code itself. The progress of the project was delayed a couple of days just because I had to re-organize the logic of my components to obtain the desired result. So yeah, from now on, Structure and logic first, then the code.
+Throughout this project, I learned some of Nest's most important features, like file structure, rate limiting and caching. I believe the abilities I acquired with this project, can help me implement secure, robust and scalable backend apps.
 
 
 ## Feedback
@@ -61,12 +61,12 @@ Any feedback is appreciated!
 
 I'm open to suggestions, positive criticism and advice, I would love to improve this project and maybe even learn something new.
 
-If you have any feedback, please reach out to me at joaquinlucascortez@gmail.com with your suggestion and **"KiteSpot - Suggestion"** as the header!
+If you have any feedback, please reach out to me at joaquinlucascortez@gmail.com with your suggestion and **"KiteSpot (backend) - Suggestion"** as the header!
 
 
 ## Related
 
 Here are some related projects.
 
-[KiteSpot - Backend](https://github.com/JoaquinCortezHub/kitespot-backend)
+[KiteSpot - Frontend](https://github.com/JoaquinCortezHub/kitespot-frontend)
 
