@@ -1,7 +1,7 @@
 
 # KiteSpot - Backend
 
-This is the backend of my KiteSpot fullstack project. KiteSpot is a kitesurfing specific weather site, providing relevant data to riders to optimize their session. The goal with the backend was to provide a robust server where the users could request data related to the weather. The server is built in a modular way using Nest.js and is design to be secure, scalable and most important quick in retrieving data. 
+This is the backend of my KiteSpot fullstack project. KiteSpot is a kitesurfing specific weather site, providing relevant data to riders to optimize their session. The goal with the backend was to provide a robust server where the users could request data related to the weather. The server is built in a modular way using Nest.js and is designed to be secure, scalable and most important quick in retrieving data. 
 
 
 ## Tech Stack
